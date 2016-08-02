@@ -43,8 +43,8 @@ export default class ItemCheckbox extends React.Component {
     super(props, context);
 
     this.state = {
-      checked: false,
-      bg_color: this.props.backgroundColor,
+      checked: props.checked,
+      bg_color: props.checked ? props.color : props.backgroundColor,
     }
   }
 
@@ -81,6 +81,7 @@ export default class ItemCheckbox extends React.Component {
   }
 
   _completeProgress(defaultValue) {
+    console.log('complete progress');
     if (this.state.checked) {
       this.setState({
         checked: false,
@@ -101,16 +102,26 @@ export default class ItemCheckbox extends React.Component {
   }
 
   _initDefault() {
+    console.log('init');
     this._completeProgress(true);
   }
 
   componentDidMount() {
+    console.log('mount');
     if (this.props.checked) {
       this._completeProgress(false);
     }
 
     if (this.props.default) {
       this._initDefault();
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.checked !== this.props.checked) {
+      this.setState({
+        checked: nextProps.checked,
+        bg_color: nextProps.checked ? this.props.color : this.props.backgroundColor,
+      });
     }
   }
 
